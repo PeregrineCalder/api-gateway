@@ -1,4 +1,4 @@
-package session;
+package socket;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -6,7 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * @projectName: api-gateway
- * @package: session
+ * @package: socket
  * @className: BaseHandler
  * @author: Peregrine Calder
  * @version: 1.0

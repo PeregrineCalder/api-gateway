@@ -1,7 +1,8 @@
 package session;
 
-import bind.GenericReferenceRegistry;
 import bind.IGenericReference;
+import bind.MapperRegistry;
+import mapping.HttpStatement;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
@@ -19,8 +20,9 @@ import java.util.Map;
  * @version: 1.0
  */
 public class Configuration {
-    // Registry for managing generic service references
-    private final GenericReferenceRegistry registry = new GenericReferenceRegistry(this);
+    private final MapperRegistry mapperRegistry = new MapperRegistry(this);
+
+    private final Map<String, HttpStatement> httpStatements = new HashMap<>();
 
     // Stores application-level configurations (application name -> ApplicationConfig)
     private final Map<String, ApplicationConfig> applicationConfigMap = new HashMap<>();
@@ -65,11 +67,20 @@ public class Configuration {
         return referenceConfigMap.get(interfaceName);
     }
 
-    public void addGenericReference(String application, String interfaceName, String methodName) {
-        registry.addGenericReference(application, interfaceName, methodName);
+    public void addMapper(HttpStatement httpStatement) {
+        mapperRegistry.addMapper(httpStatement);
     }
 
-    public IGenericReference getGenericReference(String methodName) {
-        return registry.getGenericReference(methodName);
+    public IGenericReference getMapper(String uri, GatewaySession gatewaySession) {
+        return mapperRegistry.getMapper(uri, gatewaySession);
     }
+
+    public void addHttpStatement(HttpStatement httpStatement) {
+        httpStatements.put(httpStatement.getUri(), httpStatement);
+    }
+
+    public HttpStatement getHttpStatement(String uri) {
+        return httpStatements.get(uri);
+    }
+
 }

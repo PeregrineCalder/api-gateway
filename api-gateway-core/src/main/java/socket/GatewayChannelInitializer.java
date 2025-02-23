@@ -1,4 +1,4 @@
-package session;
+package socket;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -6,21 +6,20 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseDecoder;
-import session.handlers.SessionServerHandler;
+import lombok.AllArgsConstructor;
+import session.defaults.DefaultGatewaySessionFactory;
+import socket.handlers.GatewayServerHandler;
 
 /**
  * @projectName: api-gateway
- * @package: session
+ * @package: socket
  * @className: SessionChannelInitializer
  * @author: Peregrine Calder
  * @version: 1.0
  */
-public class SessionChannelInitializer extends ChannelInitializer<SocketChannel> {
-    private final Configuration configuration;
-
-    public SessionChannelInitializer(Configuration configuration) {
-        this.configuration = configuration;
-    }
+@AllArgsConstructor
+public class GatewayChannelInitializer extends ChannelInitializer<SocketChannel> {
+    private final DefaultGatewaySessionFactory gatewaySessionFactory;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
@@ -28,6 +27,6 @@ public class SessionChannelInitializer extends ChannelInitializer<SocketChannel>
         pipeline.addLast(new HttpRequestDecoder());
         pipeline.addLast(new HttpResponseDecoder());
         pipeline.addLast(new HttpObjectAggregator(65536));
-        pipeline.addLast(new SessionServerHandler(configuration));
+        pipeline.addLast(new GatewayServerHandler(gatewaySessionFactory));
     }
 }

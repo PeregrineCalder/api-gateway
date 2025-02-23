@@ -1,11 +1,15 @@
-package session;
+package socket;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import session.defaults.DefaultGatewaySessionFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Callable;
@@ -17,9 +21,10 @@ import java.util.concurrent.Callable;
  * @author: Peregrine Calder
  * @version: 1.0
  */
-public class SessionServer implements Callable<Channel> {
-    private final Logger logger = LoggerFactory.getLogger(SessionServer.class);
-    private final Configuration configuration;
+public class GatewaySocketServer implements Callable<Channel> {
+    private final Logger logger = LoggerFactory.getLogger(GatewaySocketServer.class);
+
+    private DefaultGatewaySessionFactory gatewaySessionFactory;
 
     // listen for connections & assign to the work group
     private final EventLoopGroup boss = new NioEventLoopGroup(1);
@@ -28,8 +33,8 @@ public class SessionServer implements Callable<Channel> {
 
     private Channel channel;
 
-    public SessionServer(Configuration configuration) {
-        this.configuration = configuration;
+    public GatewaySocketServer(DefaultGatewaySessionFactory gatewaySessionFactory) {
+        this.gatewaySessionFactory = gatewaySessionFactory;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class SessionServer implements Callable<Channel> {
             bootstrap.group(boss, work)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 128)
-                    .childHandler(new SessionChannelInitializer(configuration));
+                    .childHandler(new GatewayChannelInitializer(gatewaySessionFactory));
             channelFuture = bootstrap.bind(new InetSocketAddress(7397)).syncUninterruptibly();
             this.channel = channelFuture.channel();
         } catch (Exception e) {

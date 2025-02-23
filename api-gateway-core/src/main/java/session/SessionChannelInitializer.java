@@ -16,6 +16,11 @@ import session.handlers.SessionServerHandler;
  * @version: 1.0
  */
 public class SessionChannelInitializer extends ChannelInitializer<SocketChannel> {
+    private final Configuration configuration;
+
+    public SessionChannelInitializer(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
@@ -23,6 +28,6 @@ public class SessionChannelInitializer extends ChannelInitializer<SocketChannel>
         pipeline.addLast(new HttpRequestDecoder());
         pipeline.addLast(new HttpResponseDecoder());
         pipeline.addLast(new HttpObjectAggregator(65536));
-        pipeline.addLast(new SessionServerHandler());
+        pipeline.addLast(new SessionServerHandler(configuration));
     }
 }

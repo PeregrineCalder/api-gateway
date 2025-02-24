@@ -21,6 +21,7 @@ public class HttpStatement {
     private String application;
     private String interfaceName;
     private String methodName;
+    private String parameterType;
     private String uri;
     private HttpCommandType httpCommandType;
 }

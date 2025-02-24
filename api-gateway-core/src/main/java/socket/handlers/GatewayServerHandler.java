@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import session.GatewaySession;
 import session.defaults.DefaultGatewaySessionFactory;
 import socket.BaseHandler;
+import socket.agreement.RequestParser;
+
+import java.util.Map;
 
 /**
  * @projectName: api-gateway
@@ -27,12 +30,17 @@ public class GatewayServerHandler extends BaseHandler<FullHttpRequest> {
     @Override
     protected void session(ChannelHandlerContext ctx, Channel channel, FullHttpRequest request) {
         log.info("Gateway receive request - uri：{} method：{}", request.uri(), request.method());
+
+        Map<String, Object> requestObj = new RequestParser(request).parse();
+
         String uri = request.uri();
+        int idx = uri.indexOf("?");
+        uri = idx > 0 ? uri.substring(0, idx) : uri;
         if (uri.equals("/favicon.ico")) return;
 
         GatewaySession gatewaySession = gatewaySessionFactory.openSession(uri);
         IGenericReference reference = gatewaySession.getMapper();
-        String result = reference.$invoke("test") + " " + System.currentTimeMillis();
+        String result = reference.$invoke(requestObj) + " " + System.currentTimeMillis();
 
         DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         response.content().writeBytes(JSON.toJSONBytes(result, JSONWriter.Feature.PrettyFormat));

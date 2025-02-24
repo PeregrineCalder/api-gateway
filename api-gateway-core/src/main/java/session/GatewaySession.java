@@ -2,8 +2,12 @@ package session;
 
 import bind.IGenericReference;
 
+import java.util.Map;
+
 public interface GatewaySession {
-    Object get(String uri, Object parameter);
+    Object get(String methodName, Map<String, Object> params);
+
+    Object post(String methodName, Map<String, Object> params);
 
     IGenericReference getMapper();
 

@@ -24,14 +24,25 @@ public class ApiTest {
     @Test
     public void test_gateway() throws InterruptedException, ExecutionException {
         Configuration configuration = new Configuration();
-        HttpStatement httpStatement = new HttpStatement(
+        HttpStatement httpStatement01 = new HttpStatement(
                 "api-gateway-test",
                 "gateway.rpc.IActivityBooth",
                 "sayHi",
+                "java.lang.String",
                 "/wg/activity/sayHi",
-                HttpCommandType.GET
-                );
-        configuration.addMapper(httpStatement);
+                HttpCommandType.GET);
+
+        HttpStatement httpStatement02 = new HttpStatement(
+                "api-gateway-test",
+                "gateway.rpc.IActivityBooth",
+                "insert",
+                "gateway.rpc.dto.XReq",
+                "/wg/activity/insert",
+                HttpCommandType.POST);
+
+        configuration.addMapper(httpStatement01);
+        configuration.addMapper(httpStatement02);
+
         DefaultGatewaySessionFactory gatewaySessionFactory = new DefaultGatewaySessionFactory(configuration);
         GatewaySocketServer gatewaySocketServer = new GatewaySocketServer(gatewaySessionFactory);
         Future<Channel> future = Executors.newFixedThreadPool(2).submit(gatewaySocketServer);
@@ -46,6 +57,4 @@ public class ApiTest {
         log.info("Service start complete {}", channel.localAddress());
         Thread.sleep(Long.MAX_VALUE);
     }
-
-
 }

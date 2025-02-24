@@ -1,6 +1,7 @@
 package session.defaults;
 
 import bind.IGenericReference;
+import datasource.DataSource;
 import lombok.AllArgsConstructor;
 import mapping.HttpStatement;
 import org.apache.dubbo.config.ApplicationConfig;
@@ -22,6 +23,8 @@ import session.GatewaySession;
 @AllArgsConstructor
 public class DefaultGatewaySession implements GatewaySession {
     private Configuration configuration;
+    private String uri;
+    private DataSource dataSource;
 
     @Override
     public Object get(String uri, Object parameter) {
@@ -44,7 +47,7 @@ public class DefaultGatewaySession implements GatewaySession {
     }
 
     @Override
-    public IGenericReference getMapper(String uri) {
+    public IGenericReference getMapper() {
         return configuration.getMapper(uri, this);
     }
 

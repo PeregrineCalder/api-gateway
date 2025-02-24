@@ -1,6 +1,5 @@
 package bind;
 
-import lombok.AllArgsConstructor;
 import mapping.HttpCommandType;
 import session.Configuration;
 import session.GatewaySession;
@@ -15,11 +14,11 @@ import java.lang.reflect.Method;
  * @version: 1.0
  */
 public class MapperMethod {
-    private String uri;
+    private String methodName;
     private final HttpCommandType command;
 
     public MapperMethod(String uri, Method method, Configuration configuration) {
-        this.uri = uri;
+        this.methodName = configuration.getHttpStatement(uri).getMethodName();
         this.command = configuration.getHttpStatement(uri).getHttpCommandType();
     }
 
@@ -27,7 +26,7 @@ public class MapperMethod {
         Object result = null;
         switch (command) {
             case GET:
-                result = session.get(uri, args);
+                result = session.get(methodName, args);
                 break;
             case POST:
                 break;
@@ -40,6 +39,4 @@ public class MapperMethod {
         }
         return result;
     }
-
-
 }

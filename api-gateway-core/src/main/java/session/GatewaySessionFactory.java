@@ -1,5 +1,5 @@
 package session;
 
 public interface GatewaySessionFactory {
-    GatewaySession openSession();
+    GatewaySession openSession(String uri);
 }

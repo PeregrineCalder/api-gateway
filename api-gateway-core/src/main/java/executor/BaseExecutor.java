@@ -2,7 +2,7 @@ package executor;
 
 import com.alibaba.fastjson2.JSON;
 import datasource.Connection;
-import executor.result.GatewayResult;
+import executor.result.SessionResult;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mapping.HttpStatement;
@@ -25,7 +25,7 @@ public abstract class BaseExecutor implements Executor {
     protected Connection connection;
 
     @Override
-    public GatewayResult exec(HttpStatement httpStatement, Map<String, Object> params) {
+    public SessionResult exec(HttpStatement httpStatement, Map<String, Object> params) {
         String methodName = httpStatement.getMethodName();
         String parameterType = httpStatement.getParameterType();
         String[] parameterTypes = new String[]{parameterType};
@@ -36,9 +36,9 @@ public abstract class BaseExecutor implements Executor {
                 JSON.toJSONString(parameterTypes), JSON.toJSONString(args));
         try {
             Object data = doExec(methodName, parameterTypes, args);
-            return GatewayResult.buildSuccess(data);
+            return SessionResult.buildSuccess(data);
         } catch (Exception e) {
-            return GatewayResult.buildError(e.getMessage());
+            return SessionResult.buildError(e.getMessage());
         }
     }
 

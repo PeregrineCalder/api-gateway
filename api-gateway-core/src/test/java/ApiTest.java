@@ -31,7 +31,8 @@ public class ApiTest {
                 "sayHi",
                 "java.lang.String",
                 "/wg/activity/sayHi",
-                HttpCommandType.GET);
+                HttpCommandType.GET,
+                false);
 
         HttpStatement httpStatement02 = new HttpStatement(
                 "api-gateway-test",
@@ -39,13 +40,14 @@ public class ApiTest {
                 "insert",
                 "gateway.rpc.dto.XReq",
                 "/wg/activity/insert",
-                HttpCommandType.POST);
+                HttpCommandType.POST,
+                true);
 
         configuration.addMapper(httpStatement01);
         configuration.addMapper(httpStatement02);
 
         DefaultGatewaySessionFactory gatewaySessionFactory = new DefaultGatewaySessionFactory(configuration);
-        GatewaySocketServer gatewaySocketServer = new GatewaySocketServer(gatewaySessionFactory);
+        GatewaySocketServer gatewaySocketServer = new GatewaySocketServer(configuration, gatewaySessionFactory);
         Future<Channel> future = Executors.newFixedThreadPool(2).submit(gatewaySocketServer);
         Channel channel = future.get();
         if (channel == null) {

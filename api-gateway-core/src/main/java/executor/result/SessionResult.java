@@ -12,16 +12,16 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public class GatewayResult {
+public class SessionResult {
     private String code;
     private String info;
     private Object data;
 
-    public static GatewayResult buildSuccess(Object data) {
-        return new GatewayResult("0000", "success", data);
+    public static SessionResult buildSuccess(Object data) {
+        return new SessionResult("0000", "success", data);
     }
 
-    public static GatewayResult buildError(Object data) {
-        return new GatewayResult("0001", "error", data);
+    public static SessionResult buildError(Object data) {
+        return new SessionResult("0001", "error", data);
     }
 }

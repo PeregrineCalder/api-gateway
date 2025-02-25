@@ -7,8 +7,11 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseDecoder;
 import lombok.AllArgsConstructor;
+import session.Configuration;
 import session.defaults.DefaultGatewaySessionFactory;
+import socket.handlers.AuthorizationHandler;
 import socket.handlers.GatewayServerHandler;
+import socket.handlers.ProtocolDataHandler;
 
 /**
  * @projectName: api-gateway
@@ -19,6 +22,7 @@ import socket.handlers.GatewayServerHandler;
  */
 @AllArgsConstructor
 public class GatewayChannelInitializer extends ChannelInitializer<SocketChannel> {
+    private final Configuration configuration;
     private final DefaultGatewaySessionFactory gatewaySessionFactory;
 
     @Override
@@ -27,6 +31,10 @@ public class GatewayChannelInitializer extends ChannelInitializer<SocketChannel>
         pipeline.addLast(new HttpRequestDecoder());
         pipeline.addLast(new HttpResponseDecoder());
         pipeline.addLast(new HttpObjectAggregator(65536));
-        pipeline.addLast(new GatewayServerHandler(gatewaySessionFactory));
+
+        pipeline.addLast(new GatewayServerHandler(configuration));
+        pipeline.addLast(new AuthorizationHandler(configuration));
+        pipeline.addLast(new ProtocolDataHandler(gatewaySessionFactory));
+
     }
 }

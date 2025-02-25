@@ -1,5 +1,6 @@
 package authorization;
 
+import io.jsonwebtoken.Claims;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -16,6 +17,12 @@ import org.apache.shiro.subject.PrincipalCollection;
  * @version: 1.0
  */
 public class GatewayAuthorizingRealm extends AuthorizingRealm {
+
+    @Override
+    public Class<? extends AuthenticationToken> getAuthenticationTokenClass() {
+        return GatewayAuthorizingToken.class;
+    }
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         return null;
@@ -24,7 +31,8 @@ public class GatewayAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         try {
-            JwtUtil.decode(((GatewayAuthorizingToken) authenticationToken).getJwt());
+            Claims claims = JwtUtil.decode(((GatewayAuthorizingToken) authenticationToken).getJwt());
+            if (!authenticationToken.getPrincipal().equals(claims.getSubject())) {throw new AuthenticationException("Invalid token");}
         } catch (Exception e) {
             throw new AuthenticationException("Invalid token", e);
         }

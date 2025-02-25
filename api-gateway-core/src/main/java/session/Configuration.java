@@ -1,5 +1,7 @@
 package session;
 
+import authorization.IAuth;
+import authorization.auth.AuthService;
 import bind.IGenericReference;
 import bind.MapperRegistry;
 import datasource.Connection;
@@ -28,6 +30,8 @@ public class Configuration {
     private final MapperRegistry mapperRegistry = new MapperRegistry(this);
 
     private final Map<String, HttpStatement> httpStatements = new HashMap<>();
+
+    private final IAuth auth = new AuthService();
 
     // Stores application-level configurations (application name -> ApplicationConfig)
     private final Map<String, ApplicationConfig> applicationConfigMap = new HashMap<>();
@@ -94,4 +98,7 @@ public class Configuration {
         return new SimpleExecutor(this, connection);
     }
 
+    public boolean authValidate(String uId, String token) {
+        return auth.validate(uId, token);
+    }
 }

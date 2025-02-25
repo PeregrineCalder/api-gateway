@@ -1,7 +1,6 @@
 package socket.agreement;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONWriter;
 import io.netty.handler.codec.http.*;
 
 /**
@@ -15,7 +14,7 @@ public class ResponseParser {
 
     public DefaultFullHttpResponse parse(Object result) {
         DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-        response.content().writeBytes(JSON.toJSONBytes(result, JSONWriter.Feature.PrettyFormat));
+        response.content().writeBytes(JSON.toJSONString(result).getBytes());
 
         HttpHeaders heads = response.headers();
         heads.add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON + "; charset=UTF-8");

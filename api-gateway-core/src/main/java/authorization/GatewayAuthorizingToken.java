@@ -18,13 +18,13 @@ import org.apache.shiro.authc.AuthenticationToken;
 @Getter
 @Setter
 public class GatewayAuthorizingToken implements AuthenticationToken {
-    private String channelId;
+    private String uid;
 
     private String jwt;
 
     @Override
     public Object getPrincipal() {
-        return channelId;
+        return uid;
     }
 
     @Override

@@ -24,4 +24,5 @@ public class HttpStatement {
     private String parameterType;
     private String uri;
     private HttpCommandType httpCommandType;
+    private boolean auth;
 }

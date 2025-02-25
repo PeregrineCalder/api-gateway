@@ -9,6 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import session.Configuration;
 import session.defaults.DefaultGatewaySessionFactory;
 
 import java.net.InetSocketAddress;
@@ -24,7 +25,8 @@ import java.util.concurrent.Callable;
 public class GatewaySocketServer implements Callable<Channel> {
     private final Logger logger = LoggerFactory.getLogger(GatewaySocketServer.class);
 
-    private DefaultGatewaySessionFactory gatewaySessionFactory;
+    private final DefaultGatewaySessionFactory gatewaySessionFactory;
+    private final Configuration configuration;
 
     // listen for connections & assign to the work group
     private final EventLoopGroup boss = new NioEventLoopGroup(1);
@@ -33,7 +35,8 @@ public class GatewaySocketServer implements Callable<Channel> {
 
     private Channel channel;
 
-    public GatewaySocketServer(DefaultGatewaySessionFactory gatewaySessionFactory) {
+    public GatewaySocketServer(Configuration configuration, DefaultGatewaySessionFactory gatewaySessionFactory) {
+        this.configuration = configuration;
         this.gatewaySessionFactory = gatewaySessionFactory;
     }
 
@@ -45,7 +48,7 @@ public class GatewaySocketServer implements Callable<Channel> {
             bootstrap.group(boss, work)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 128)
-                    .childHandler(new GatewayChannelInitializer(gatewaySessionFactory));
+                    .childHandler(new GatewayChannelInitializer(configuration, gatewaySessionFactory));
             channelFuture = bootstrap.bind(new InetSocketAddress(7397)).syncUninterruptibly();
             this.channel = channelFuture.channel();
         } catch (Exception e) {

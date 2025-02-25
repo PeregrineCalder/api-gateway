@@ -1,18 +1,17 @@
 package socket.handlers;
 
-import bind.IGenericReference;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import session.GatewaySession;
-import session.defaults.DefaultGatewaySessionFactory;
+import mapping.HttpStatement;
+import session.Configuration;
 import socket.BaseHandler;
+import socket.agreement.AgreementConstants;
+import socket.agreement.GatewayResultMessage;
 import socket.agreement.RequestParser;
 import socket.agreement.ResponseParser;
-
-import java.util.Map;
 
 /**
  * @projectName: api-gateway
@@ -24,22 +23,24 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 public class GatewayServerHandler extends BaseHandler<FullHttpRequest> {
-    private final DefaultGatewaySessionFactory gatewaySessionFactory;
+    private final Configuration configuration;
 
     @Override
     protected void session(ChannelHandlerContext ctx, Channel channel, FullHttpRequest request) {
-        log.info("Gateway receive request - uri：{} method：{}", request.uri(), request.method());
+        log.info("Gateway receive request [global] - uri：{} method：{}", request.uri(), request.method());
 
-        RequestParser requestParser = new RequestParser(request);
-        String uri = requestParser.getUri();
-        if (uri == null) return;
-        Map<String, Object> args = requestParser.parse();
+        try {
+            RequestParser requestParser = new RequestParser(request);
+            String uri = requestParser.getUri();
 
-        GatewaySession gatewaySession = gatewaySessionFactory.openSession(uri);
-        IGenericReference reference = gatewaySession.getMapper();
-        String result = reference.$invoke(args);
+            HttpStatement httpStatement = configuration.getHttpStatement(uri);
+            channel.attr(AgreementConstants.HTTP_STATEMENT).set(httpStatement);
 
-        DefaultFullHttpResponse response = new ResponseParser().parse(result);
-        channel.writeAndFlush(response);
+            request.retain();
+            ctx.fireChannelRead(request);
+        } catch (Exception e) {
+            DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._500.getCode(), "Internal Server Error" + e.getMessage()));
+            channel.writeAndFlush(response);
+        }
     }
 }

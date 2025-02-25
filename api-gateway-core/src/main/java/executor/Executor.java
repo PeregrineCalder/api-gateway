@@ -1,10 +1,10 @@
 package executor;
 
-import executor.result.GatewayResult;
+import executor.result.SessionResult;
 import mapping.HttpStatement;
 
 import java.util.Map;
 
 public interface Executor {
-    GatewayResult exec(HttpStatement httpStatement, Map<String, Object> params) throws Exception;
+    SessionResult exec(HttpStatement httpStatement, Map<String, Object> params) throws Exception;
 }

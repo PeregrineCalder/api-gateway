@@ -3,6 +3,7 @@ package session.defaults;
 import bind.IGenericReference;
 import datasource.Connection;
 import datasource.DataSource;
+import executor.Executor;
 import lombok.AllArgsConstructor;
 import mapping.HttpStatement;
 import session.Configuration;
@@ -22,19 +23,16 @@ import java.util.Map;
 public class DefaultGatewaySession implements GatewaySession {
     private Configuration configuration;
     private String uri;
-    private DataSource dataSource;
+    private Executor executor;
 
     @Override
     public Object get(String uri, Map<String, Object> params) {
-        Connection connection = dataSource.getConnection();
         HttpStatement httpStatement = configuration.getHttpStatement(uri);
-        String parameterType = httpStatement.getParameterType();
-
-        return connection.execute(httpStatement.getMethodName(),
-                new String[]{parameterType},
-                new String[]{"ignore"},
-                SimpleTypeRegistry.isSimpleType(parameterType) ? params.values().toArray() : new Object[]{params}
-        );
+        try {
+            return executor.exec(httpStatement, params);
+        } catch (Exception e) {
+            throw new RuntimeException("Error exec get. Cause: " + e);
+        }
     }
 
     @Override

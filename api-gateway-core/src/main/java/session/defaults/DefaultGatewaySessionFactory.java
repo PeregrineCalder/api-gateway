@@ -3,6 +3,7 @@ package session.defaults;
 import datasource.DataSource;
 import datasource.DataSourceFactory;
 import datasource.unpooled.UnpooledDataSourceFactory;
+import executor.Executor;
 import lombok.AllArgsConstructor;
 import session.Configuration;
 import session.GatewaySession;
@@ -24,6 +25,7 @@ public class DefaultGatewaySessionFactory implements GatewaySessionFactory {
         DataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
         dataSourceFactory.setProperties(configuration, uri);
         DataSource dataSource = dataSourceFactory.getDataSource();
-        return new DefaultGatewaySession(configuration, uri, dataSource);
+        Executor executor = configuration.newExecutor(dataSource.getConnection());
+        return new DefaultGatewaySession(configuration, uri, executor);
     }
 }

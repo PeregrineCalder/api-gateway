@@ -2,6 +2,9 @@ package session;
 
 import bind.IGenericReference;
 import bind.MapperRegistry;
+import datasource.Connection;
+import executor.Executor;
+import executor.SimpleExecutor;
 import mapping.HttpStatement;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
@@ -81,6 +84,10 @@ public class Configuration {
 
     public HttpStatement getHttpStatement(String uri) {
         return httpStatements.get(uri);
+    }
+
+    public Executor newExecutor(Connection connection) {
+        return new SimpleExecutor(this, connection);
     }
 
 }

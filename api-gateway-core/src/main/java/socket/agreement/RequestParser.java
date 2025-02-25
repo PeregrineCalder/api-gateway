@@ -26,6 +26,14 @@ import java.util.Map;
 public class RequestParser {
     private final FullHttpRequest request;
 
+    public String getUri() {
+        String uri = request.uri();
+        int idx = uri.indexOf("?");
+        uri = idx > 0 ? uri.substring(0, idx) : uri;
+        if (uri.equals("/favicon.ico")) return null;
+        return uri;
+    }
+
     public Map<String, Object> parse() {
         String contentType = getContentType();
         HttpMethod method = request.method();
@@ -55,6 +63,8 @@ public class RequestParser {
                         return JSON.parseObject(content);
                     }
                     break;
+                case "none":
+                    return new HashMap<>();
                 default:
                     throw new RuntimeException("Unimplemented Content-Type：" + contentType);
             }

@@ -37,7 +37,7 @@ public class GatewayServerHandler extends BaseHandler<FullHttpRequest> {
 
         GatewaySession gatewaySession = gatewaySessionFactory.openSession(uri);
         IGenericReference reference = gatewaySession.getMapper();
-        String result = reference.$invoke(args) + " " + System.currentTimeMillis();
+        String result = reference.$invoke(args);
 
         DefaultFullHttpResponse response = new ResponseParser().parse(result);
         channel.writeAndFlush(response);

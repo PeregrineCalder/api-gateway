@@ -24,6 +24,7 @@ public class ApiTest {
     @Test
     public void test_gateway() throws InterruptedException, ExecutionException {
         Configuration configuration = new Configuration();
+        configuration.registryConfig("api-gateway-test", "zookeeper://127.0.0.1:2181", "gateway.rpc.IActivityBooth", "1.0.0");
         HttpStatement httpStatement01 = new HttpStatement(
                 "api-gateway-test",
                 "gateway.rpc.IActivityBooth",

@@ -35,7 +35,6 @@ public class RequestParser {
     }
 
     public Map<String, Object> parse() {
-        String contentType = getContentType();
         HttpMethod method = request.method();
         if (HttpMethod.GET == method) {
             Map<String, Object> parameterMap = new HashMap<>();
@@ -43,6 +42,7 @@ public class RequestParser {
             decoder.parameters().forEach((key, value) -> parameterMap.put(key, value.get(0)));
             return parameterMap;
         } else if (HttpMethod.POST == method) {
+            String contentType = getContentType();
             switch (contentType) {
                 case "multipart/form-data":
                     Map<String, Object> parameterMap = new HashMap<>();

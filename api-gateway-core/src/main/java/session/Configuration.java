@@ -5,6 +5,7 @@ import bind.MapperRegistry;
 import datasource.Connection;
 import executor.Executor;
 import executor.SimpleExecutor;
+import lombok.NoArgsConstructor;
 import mapping.HttpStatement;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @description: session life-circle configuration
  * @version: 1.0
  */
+@NoArgsConstructor
 public class Configuration {
     private final MapperRegistry mapperRegistry = new MapperRegistry(this);
 
@@ -36,26 +38,28 @@ public class Configuration {
     // Stores Dubbo generic service reference configurations (interface name -> ReferenceConfig)
     private final Map<String, ReferenceConfig<GenericService>> referenceConfigMap = new HashMap<>();
 
-    public Configuration() {
-        // Initialize application configuration
-        ApplicationConfig application = new ApplicationConfig();
-        application.setName("api-gateway-test");
-        application.setQosEnable(false);
+    public synchronized void registryConfig(String applicationName, String address, String interfaceName, String version) {
+        if (applicationConfigMap.get(applicationName) == null) {
+            ApplicationConfig application = new ApplicationConfig();
+            application.setName(applicationName);
+            application.setQosEnable(false);
+            applicationConfigMap.put(applicationName, application);
+        }
 
-        // Initialize registry configuration
-        RegistryConfig registry = new RegistryConfig();
-        registry.setAddress("zookeeper://127.0.0.1:2181");
-        registry.setRegister(false);
+        if (registryConfigMap.get(applicationName) == null) {
+            RegistryConfig registry = new RegistryConfig();
+            registry.setAddress(address);
+            registry.setRegister(false);
+            registryConfigMap.put(applicationName, registry);
+        }
 
-        // Initialize reference configuration for Dubbo generic service invocation
-        ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
-        reference.setInterface("gateway.rpc.IActivityBooth");
-        reference.setVersion("1.0.0");
-        reference.setGeneric("true");
-
-        applicationConfigMap.put("api-gateway-test", application);
-        registryConfigMap.put("api-gateway-test", registry);
-        referenceConfigMap.put("gateway.rpc.IActivityBooth", reference);
+        if (referenceConfigMap.get(interfaceName) == null) {
+            ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
+            reference.setInterface(interfaceName);
+            reference.setVersion(version);
+            reference.setGeneric("true");
+            referenceConfigMap.put(interfaceName, reference);
+        }
     }
 
     public ApplicationConfig getApplicationConfig(String applicationName) {

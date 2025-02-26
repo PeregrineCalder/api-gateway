@@ -1,0 +1,57 @@
+package center.interfaces;
+
+import center.application.IConfigManageService;
+import center.domain.manage.model.vo.GatewayServerVO;
+import center.infrastructure.common.ResponseCode;
+import center.infrastructure.common.Result;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * @projectName: api-gateway
+ * @package: center.interfaces
+ * @className: GatewayConfigManage
+ * @author: Peregrine Calder
+ * @description: Gateway registration, Service grouping, Service association
+ * @version: 1.0
+ */
+@RestController
+@RequestMapping("/wg/admin/config")
+@Slf4j
+public class GatewayConfigManage {
+    @Resource
+    private IConfigManageService configManageService;
+
+    @GetMapping(value = "queryServerConfig", produces = "application/json;charset=utf-8")
+    public Result<List<GatewayServerVO>> queryServerConfig() {
+        try {
+            log.info("Query Gateway Service Configuration Information");
+            List<GatewayServerVO> gatewayServerVOList = configManageService.queryGatewayServerList();
+            return new Result<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), gatewayServerVOList);
+        } catch (Exception e) {
+            log.error("Query Gateway Service Configuration Error", e);
+            return new Result<>(ResponseCode.UN_ERROR.getCode(), e.getMessage(), null);
+        }
+    }
+
+    @PostMapping(value = "registerGateway")
+    public Result<Boolean> registerGatewayServerNode(@RequestParam String groupId, @RequestParam String gatewayId, @RequestParam String gatewayName, @RequestParam String gatewayAddress) {
+        try {
+            log.info("Register Gateway Server Node gatewayId：{} gatewayName：{} gatewayAddress：{}", gatewayId, gatewayName, gatewayAddress);
+            boolean done = configManageService.registerGatewayServerNode(groupId, gatewayId, gatewayName, gatewayAddress);
+            return new Result<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), done);
+        } catch (Exception e) {
+            log.error("Register Gateway Server Node Error", e);
+            return new Result<>(ResponseCode.UN_ERROR.getCode(), e.getMessage(), null);
+        }
+    }
+
+    @PostMapping(value = "distributionGateway")
+    public void distributionGatewayServerNode(@RequestParam String groupId, @RequestParam String gatewayId) {
+        // TODO
+    }
+
+}

@@ -7,17 +7,18 @@ import java.util.Date;
 
 /**
  * @projectName: api-gateway
- * @package: infrastructure.po
- * @className: HttpStatement
+ * @package: center.infrastructure.po
+ * @className: ApplicationInterfaceMethod
  * @author: Peregrine Calder
  * @version: 1.0
  */
-@Getter
 @Setter
-public class HttpStatement {
+@Getter
+public class ApplicationInterfaceMethod {
     private Integer id;
-    private String application;
-    private String interfaceName;
+    private String systemId;
+    private String interfaceId;
+    private String methodId;
     private String methodName;
     private String parameterType;
     private String uri;

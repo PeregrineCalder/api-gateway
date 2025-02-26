@@ -1,5 +1,5 @@
-import center.application.IApiService;
-import center.domain.model.ApiData;
+import center.application.IConfigManageService;
+import center.domain.manage.model.vo.GatewayServerVO;
 import com.alibaba.fastjson2.JSON;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +22,18 @@ import java.util.List;
 @Slf4j
 public class ApiTest {
     @Resource
-    private IApiService apiService;
+    private IConfigManageService configManageService;
 
     @Test
-    public void test() {
-        List<ApiData> apiDataList = apiService.queryHttpStatementList();
-        log.info("Test result: {}", JSON.toJSONString(apiDataList));
+    public void test_queryGatewayServerList() {
+        List<GatewayServerVO> gatewayServerVOS = configManageService.queryGatewayServerList();
+        log.info("Test result: {}", JSON.toJSONString(gatewayServerVOS));
+    }
+
+    @Test
+    public void test_registerGatewayServerNode() {
+        configManageService.registerGatewayServerNode("10001", "api-gateway-g1", "payment gateway", "127.0.0.196");
+        configManageService.registerGatewayServerNode("10001", "api-gateway-g2", "payment gateway", "127.0.0.197");
+        configManageService.registerGatewayServerNode("10001", "api-gateway-g3", "delivery gateway", "127.0.0.198");
     }
 }

@@ -11,6 +11,7 @@
     <modules>
         <module>api-gateway-core</module>
         <module>api-gateway-center</module>
+        <module>api-gateway-assist</module>
     </modules>
 
     <properties>
@@ -119,6 +120,11 @@
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <version>9.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.8.36</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

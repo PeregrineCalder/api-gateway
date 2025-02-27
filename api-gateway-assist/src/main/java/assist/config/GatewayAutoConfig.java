@@ -1,7 +1,7 @@
 package assist.config;
 
 import assist.application.GatewayApplication;
-import assist.service.RegisterGatewayService;
+import assist.domain.service.GatewayCenterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,12 +19,12 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class GatewayAutoConfig {
     @Bean
-    public RegisterGatewayService registerGatewayService() {
-        return new RegisterGatewayService();
+    public GatewayCenterService registerGatewayService() {
+        return new GatewayCenterService();
     }
 
     @Bean
-    public GatewayApplication gatewayApplication(GatewayServiceProperties properties, RegisterGatewayService registerGatewayService) {
+    public GatewayApplication gatewayApplication(GatewayServiceProperties properties, GatewayCenterService registerGatewayService) {
         return new GatewayApplication(properties, registerGatewayService);
     }
 

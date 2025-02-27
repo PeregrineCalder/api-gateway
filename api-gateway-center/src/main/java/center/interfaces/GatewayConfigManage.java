@@ -1,6 +1,7 @@
 package center.interfaces;
 
 import center.application.IConfigManageService;
+import center.domain.manage.model.aggregates.ApplicationSystemRichInfo;
 import center.domain.manage.model.vo.GatewayServerVO;
 import center.infrastructure.common.ResponseCode;
 import center.infrastructure.common.Result;
@@ -54,4 +55,15 @@ public class GatewayConfigManage {
         // TODO
     }
 
+    @PostMapping(value = "queryApplicationSystemRichInfo", produces = "application/json;charset=utf-8")
+    public Result<ApplicationSystemRichInfo> queryApplicationSystemRichInfo(@RequestParam String gatewayId) {
+        try {
+            log.info("Query application system info(system, interface, method) under gateway to be assigned: gatewayId：{}", gatewayId);
+            ApplicationSystemRichInfo applicationSystemRichInfo = configManageService.queryApplicationSystemRichInfo(gatewayId);
+            return new Result<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), applicationSystemRichInfo);
+        } catch (Exception e) {
+            log.error("Fail to query application system info(system, interface, method) under gateway to be assigned: gatewayId gatewayId：{}", gatewayId, e);
+            return new Result<>(ResponseCode.UN_ERROR.getCode(), e.getMessage(), null);
+        }
+    }
 }

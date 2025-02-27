@@ -82,7 +82,7 @@ public class RpcRegisterManage {
                                                               @RequestParam String interfaceId,
                                                               @RequestParam String methodId,
                                                               @RequestParam String methodName,
-                                                              @RequestParam String parameter_type,
+                                                              @RequestParam String parameterType,
                                                               @RequestParam String uri,
                                                               @RequestParam String httpCommandType,
                                                               @RequestParam Integer auth) {
@@ -93,7 +93,7 @@ public class RpcRegisterManage {
                     .interfaceId(interfaceId)
                     .methodId(methodId)
                     .methodName(methodName)
-                    .parameterType(parameter_type)
+                    .parameterType(parameterType)
                     .uri(uri)
                     .httpCommandType(httpCommandType)
                     .auth(auth)

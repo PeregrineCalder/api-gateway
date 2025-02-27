@@ -1,5 +1,6 @@
 import center.application.IConfigManageService;
 import center.application.IRegisterManageService;
+import center.domain.manage.model.aggregates.ApplicationSystemRichInfo;
 import center.domain.manage.model.vo.GatewayServerVO;
 import center.domain.register.model.vo.ApplicationInterfaceMethodVO;
 import center.domain.register.model.vo.ApplicationInterfaceVO;
@@ -93,4 +94,11 @@ public class ApiTest {
                 .build();
         registerManageService.registerApplicationInterfaceMethod(applicationInterfaceVO02);
     }
+
+    @Test
+    public void test_queryApplicationSystemRichInfo(){
+        ApplicationSystemRichInfo result = configManageService.queryApplicationSystemRichInfo("api-gateway-g4");
+        log.info("Test Result: {}", JSON.toJSONString(result));
+    }
+
 }

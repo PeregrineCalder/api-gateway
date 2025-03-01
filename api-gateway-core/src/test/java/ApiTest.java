@@ -1,11 +1,11 @@
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
-import mapping.HttpCommandType;
-import mapping.HttpStatement;
+import core.mapping.HttpCommandType;
+import core.mapping.HttpStatement;
 import org.junit.jupiter.api.Test;
-import session.Configuration;
-import session.defaults.DefaultGatewaySessionFactory;
-import socket.GatewaySocketServer;
+import core.session.Configuration;
+import core.session.defaults.DefaultGatewaySessionFactory;
+import core.socket.GatewaySocketServer;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -24,6 +24,8 @@ public class ApiTest {
     @Test
     public void test_gateway() throws InterruptedException, ExecutionException {
         Configuration configuration = new Configuration();
+        configuration.setHostName("127.0.0.1");
+        configuration.setPort(7397);
         configuration.registryConfig("api-gateway-test", "zookeeper://127.0.0.1:2181", "gateway.rpc.IActivityBooth", "1.0.0");
         HttpStatement httpStatement01 = new HttpStatement(
                 "api-gateway-test",

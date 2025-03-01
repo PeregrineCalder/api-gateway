@@ -12,7 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Result {
+public class Result<T> {
     private String code;
     private String info;
+    private T data;
 }

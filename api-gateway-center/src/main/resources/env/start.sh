@@ -1,0 +1,1 @@
+docker run -p 8004:8004 --name api-gateway-engin -d api-gateway-engin:1.0.0

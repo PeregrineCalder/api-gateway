@@ -1,8 +1,8 @@
 package center.domain.manage.service;
 
 import center.application.IConfigManageService;
-import center.domain.manage.model.vo.GatewayServerDetailVO;
-import center.domain.manage.model.vo.GatewayServerVO;
+import center.domain.manage.model.aggregates.ApplicationSystemRichInfo;
+import center.domain.manage.model.vo.*;
 import center.domain.manage.repository.IConfigManageRepository;
 import center.infrastructure.common.Constants;
 import jakarta.annotation.Resource;
@@ -40,5 +40,20 @@ public class ConfigManageService implements IConfigManageService {
         } else {
             return configManageRepository.updateGatewayStatus(gatewayId, gatewayAddress, Constants.GatewayStatus.Available);
         }
+    }
+
+    @Override
+    public ApplicationSystemRichInfo queryApplicationSystemRichInfo(String gatewayId) {
+        List<String> systemIdList = configManageRepository.queryGatewayDistributionSystemIdList(gatewayId);
+        List<ApplicationSystemVO> applicationSystemVOList = configManageRepository.queryApplicationSystemList(systemIdList);
+        for (ApplicationSystemVO applicationSystemVO : applicationSystemVOList) {
+            List<ApplicationInterfaceVO> applicationInterfaceVOList = configManageRepository.queryApplicationInterfaceList(applicationSystemVO.getSystemId());
+            for (ApplicationInterfaceVO applicationInterfaceVO : applicationInterfaceVOList) {
+                List<ApplicationInterfaceMethodVO> applicationInterfaceMethodVOList = configManageRepository.queryApplicationInterfaceMethodList(applicationSystemVO.getSystemId(), applicationInterfaceVO.getInterfaceId());
+                applicationInterfaceVO.setMethodList(applicationInterfaceMethodVOList);
+            }
+            applicationSystemVO.setInterfaceList(applicationInterfaceVOList);
+        }
+        return new ApplicationSystemRichInfo(gatewayId, applicationSystemVOList);
     }
 }

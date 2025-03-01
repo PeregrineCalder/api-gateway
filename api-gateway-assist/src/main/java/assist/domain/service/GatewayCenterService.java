@@ -28,7 +28,13 @@ public class GatewayCenterService {
         paramMap.put("gatewayId", gatewayId);
         paramMap.put("gatewayName", gatewayName);
         paramMap.put("gatewayAddress", gatewayAddress);
-        String resultStr = HttpUtil.post(address + "/wg/admin/config/registerGateway", paramMap, 550);
+        String resultStr;
+        try {
+            resultStr = HttpUtil.post(address + "/wg/admin/config/registerGateway", paramMap, 550);
+        } catch (Exception e) {
+            log.error("abnormal gateway service registration, unavailable link resources：{}", address + "/wg/admin/config/registerGateway");
+            throw e;
+        }
         Result<Boolean> result = JSON.parseObject(resultStr, new TypeReference<>() {});
         log.info("Register gateway service on gateway center gatewayId: {} gatewayName: {} gatewayAddress: {} register result: {}", gatewayId, gatewayName, gatewayAddress, resultStr);
         if (!"0000".equals(result.getCode()))
@@ -38,7 +44,13 @@ public class GatewayCenterService {
     public ApplicationSystemRichInfo pullApplicationSystemRichInfo(String address, String gatewayId) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("gatewayId", gatewayId);
-        String resultStr = HttpUtil.post(address + "/wg/admin/config/queryApplicationSystemRichInfo", paramMap, 550);
+        String resultStr;
+        try {
+            resultStr = HttpUtil.post(address + "/wg/admin/config/queryApplicationSystemRichInfo", paramMap, 550);
+        } catch (Exception e) {
+            log.error("Abnormal gateway service pull, unavailable link resources：{}", address + "/wg/admin/config/queryApplicationSystemRichInfo");
+            throw e;
+        }
         Result<ApplicationSystemRichInfo> result = JSON.parseObject(resultStr, new TypeReference<>(){});
         log.info("Pull the configuration information of the application service and interface from the gateway center to the local device for registration: gatewayId：{}", gatewayId);
         if (!"0000".equals(result.getCode()))

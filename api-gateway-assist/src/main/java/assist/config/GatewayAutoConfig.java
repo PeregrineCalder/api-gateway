@@ -31,20 +31,20 @@ public class GatewayAutoConfig {
     }
 
     @Bean
-    public GatewayApplication gatewayApplication(GatewayServiceProperties properties, GatewayCenterService registerGatewayService, core.session.Configuration configuration) {
-        return new GatewayApplication(properties, registerGatewayService, configuration);
+    public GatewayApplication gatewayApplication(GatewayServiceProperties properties, GatewayCenterService registerGatewayService, core.session.Configuration configuration, Channel gatewaySocketServerChannel) {
+        return new GatewayApplication(properties, registerGatewayService, configuration, gatewaySocketServerChannel);
     }
 
     @Bean
     public core.session.Configuration gatewayCoreConfiguration(GatewayServiceProperties properties) {
         core.session.Configuration config = new core.session.Configuration();
         String[] split = properties.getGatewayAddress().split(":");
-        config.setHostName(split[0]);
+        config.setHostName(split[0].trim());
         config.setPort(Integer.parseInt(split[1].trim()));
         return config;
     }
 
-    @Bean
+    @Bean("gatewaySocketServerChannel")
     public Channel initGateway(core.session.Configuration config) throws ExecutionException, InterruptedException {
         DefaultGatewaySessionFactory gatewaySessionFactory = new DefaultGatewaySessionFactory(config);
         GatewaySocketServer server = new GatewaySocketServer(config, gatewaySessionFactory);

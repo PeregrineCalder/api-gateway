@@ -1,6 +1,6 @@
-import authorization.IAuth;
-import authorization.JwtUtil;
-import authorization.auth.AuthService;
+import core.authorization.IAuth;
+import core.authorization.JwtUtil;
+import core.authorization.auth.AuthService;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;

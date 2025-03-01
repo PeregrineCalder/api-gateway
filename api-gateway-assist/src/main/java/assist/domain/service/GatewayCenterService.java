@@ -28,8 +28,8 @@ public class GatewayCenterService {
         paramMap.put("gatewayId", gatewayId);
         paramMap.put("gatewayName", gatewayName);
         paramMap.put("gatewayAddress", gatewayAddress);
-        String resultStr = HttpUtil.post(address, paramMap, 350);
-        Result result = JSON.parseObject(resultStr, Result.class);
+        String resultStr = HttpUtil.post(address + "/wg/admin/config/registerGateway", paramMap, 550);
+        Result<Boolean> result = JSON.parseObject(resultStr, new TypeReference<>() {});
         log.info("Register gateway service on gateway center gatewayId: {} gatewayName: {} gatewayAddress: {} register result: {}", gatewayId, gatewayName, gatewayAddress, resultStr);
         if (!"0000".equals(result.getCode()))
             throw new GatewayException("Gateway Service Registration Anomaly [gatewayId：" + gatewayId + "] 、[gatewayAddress：" + gatewayAddress + "]");
@@ -38,7 +38,7 @@ public class GatewayCenterService {
     public ApplicationSystemRichInfo pullApplicationSystemRichInfo(String address, String gatewayId) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("gatewayId", gatewayId);
-        String resultStr = HttpUtil.post(address + "/wg/admin/config/queryApplicationSystemRichInfo", paramMap, 350);
+        String resultStr = HttpUtil.post(address + "/wg/admin/config/queryApplicationSystemRichInfo", paramMap, 550);
         Result<ApplicationSystemRichInfo> result = JSON.parseObject(resultStr, new TypeReference<>(){});
         log.info("Pull the configuration information of the application service and interface from the gateway center to the local device for registration: gatewayId：{}", gatewayId);
         if (!"0000".equals(result.getCode()))

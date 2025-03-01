@@ -21,4 +21,7 @@ public class ApplicationInterfaceMethodVO {
     private String uri;
     private String httpCommandType;
     private Integer auth;
+    public boolean isAuth(){
+        return auth == 1;
+    }
 }

@@ -13,6 +13,7 @@
         <module>api-gateway-center</module>
         <module>api-gateway-assist</module>
         <module>api-gateway-engine</module>
+        <module>api-gateway-sdk</module>
     </modules>
 
     <properties>
@@ -99,6 +100,12 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
+                <version>3.4.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-test</artifactId>
                 <version>3.4.3</version>
                 <scope>test</scope>
             </dependency>

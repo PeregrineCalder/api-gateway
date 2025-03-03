@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import sdk.application.GatewaySDKApplication;
+import sdk.domain.service.GatewayCenterService;
 
 /**
  * @projectName: api-gateway
@@ -15,8 +16,14 @@ import sdk.application.GatewaySDKApplication;
 @Configuration
 @EnableConfigurationProperties(GatewaySDKServiceProperties.class)
 public class GatewaySDKAutoConfig {
+
     @Bean
-    public GatewaySDKApplication gatewaySDKApplication(GatewaySDKServiceProperties properties) {
-        return new GatewaySDKApplication(properties);
+    public GatewayCenterService gatewayCenterService() {
+        return new GatewayCenterService();
+    }
+
+    @Bean
+    public GatewaySDKApplication gatewaySDKApplication(GatewaySDKServiceProperties properties, GatewayCenterService gatewayCenterService) {
+        return new GatewaySDKApplication(properties, gatewayCenterService);
     }
 }

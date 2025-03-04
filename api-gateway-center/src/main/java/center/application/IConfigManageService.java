@@ -12,4 +12,6 @@ public interface IConfigManageService {
     boolean registerGatewayServerNode(String groupId, String gatewayId, String gatewayName, String gatewayAddress);
 
     ApplicationSystemRichInfo queryApplicationSystemRichInfo(String gatewayId);
+
+    String queryGatewayDistribution(String systemId);
 }

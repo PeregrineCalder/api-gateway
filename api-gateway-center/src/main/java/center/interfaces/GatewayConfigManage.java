@@ -1,6 +1,7 @@
 package center.interfaces;
 
 import center.application.IConfigManageService;
+import center.application.IMessageService;
 import center.domain.manage.model.aggregates.ApplicationSystemRichInfo;
 import center.domain.manage.model.vo.GatewayServerVO;
 import center.infrastructure.common.ResponseCode;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @projectName: api-gateway
@@ -25,6 +27,8 @@ import java.util.List;
 public class GatewayConfigManage {
     @Resource
     private IConfigManageService configManageService;
+    @Resource
+    private IMessageService messageService;
 
     @GetMapping(value = "queryServerConfig", produces = "application/json;charset=utf-8")
     public Result<List<GatewayServerVO>> queryServerConfig() {
@@ -66,4 +70,17 @@ public class GatewayConfigManage {
             return new Result<>(ResponseCode.UN_ERROR.getCode(), e.getMessage(), null);
         }
     }
+
+    @PostMapping(value = "queryRedisConfig", produces = "application/json;charset=utf-8")
+    public Result<Map<String, String>> queryRedisConfig() {
+        try {
+            log.info("Find gateway center redis configuration information");
+            Map<String, String> redisConfig = messageService.queryRedisConfig();
+            return new Result<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), redisConfig);
+        } catch (Exception e) {
+            log.error("Fail to find gateway center redis configuration information", e);
+            return new Result<>(ResponseCode.UN_ERROR.getCode(), e.getMessage(), null);
+        }
+    }
+
 }

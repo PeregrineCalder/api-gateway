@@ -57,32 +57,47 @@ public class GatewayApplication implements ApplicationContextAware, ApplicationL
                     properties.getGatewayId(),
                     properties.getGatewayName(),
                     properties.getGatewayAddress());
-
-            ApplicationSystemRichInfo applicationSystemRichInfo = gatewayCenterService.pullApplicationSystemRichInfo(properties.getAddress(), properties.getGatewayId());
-            List<ApplicationSystemVO> applicationSystemVOList = applicationSystemRichInfo.getApplicationSystemVOList();
-            for (ApplicationSystemVO applicationSystemVO : applicationSystemVOList) {
-                List<ApplicationInterfaceVO> interfaceVOList = applicationSystemVO.getInterfaceList();
-                for (ApplicationInterfaceVO applicationInterfaceVO : interfaceVOList) {
-                    configuration.registryConfig(applicationSystemVO.getSystemId(), applicationSystemVO.getSystemRegistry(), applicationInterfaceVO.getInterfaceId(), applicationInterfaceVO.getInterfaceVersion());
-                    List<ApplicationInterfaceMethodVO> methodVOList = applicationInterfaceVO.getMethodList();
-                    for (ApplicationInterfaceMethodVO applicationInterfaceMethodVO : methodVOList) {
-                        HttpStatement httpStatement = new HttpStatement(
-                                applicationSystemVO.getSystemId(),
-                                applicationInterfaceVO.getInterfaceId(),
-                                applicationInterfaceMethodVO.getMethodId(),
-                                applicationInterfaceMethodVO.getParameterType(),
-                                applicationInterfaceMethodVO.getUri(),
-                                HttpCommandType.valueOf(applicationInterfaceMethodVO.getHttpCommandType()),
-                                applicationInterfaceMethodVO.isAuth()
-                        );
-                        configuration.addMapper(httpStatement);
-                        log.info("Gateway Register Service Mapping: System: {} Interface: {} Method: {}", applicationSystemVO.getSystemId(), applicationInterfaceMethodVO.getInterfaceId(), applicationInterfaceMethodVO.getMethodId());
-                    }
-                }
-            }
+            addMappers("");
         } catch (Exception e) {
             log.error("Gateway Service fail to start. Stop Service. {}", e.getMessage(), e);
             throw e;
         }
     }
+
+    public void addMappers(String systemId) {
+        ApplicationSystemRichInfo applicationSystemRichInfo = gatewayCenterService.pullApplicationSystemRichInfo(properties.getAddress(), properties.getGatewayId(), systemId);
+        List<ApplicationSystemVO> applicationSystemVOList = applicationSystemRichInfo.getApplicationSystemVOList();
+        if (applicationSystemVOList.isEmpty()) {
+            log.warn("Gateway {} Service registration mapping fails, check gatewayCenterService.pullApplicationSystemRichInfo whether configuration data needs to be pulled for this gateway is retrieved", systemId);
+            return;
+        }
+        for (ApplicationSystemVO system : applicationSystemVOList) {
+            List<ApplicationInterfaceVO> interfaceList = system.getInterfaceList();
+            for (ApplicationInterfaceVO itf : interfaceList) {
+                // 2.1 创建配置信息加载注册
+                configuration.registryConfig(system.getSystemId(), system.getSystemRegistry(), itf.getInterfaceId(), itf.getInterfaceVersion());
+                List<ApplicationInterfaceMethodVO> methodList = itf.getMethodList();
+                // 2.2 注册系统服务接口信息
+                for (ApplicationInterfaceMethodVO method : methodList) {
+                    HttpStatement httpStatement = new HttpStatement(
+                            system.getSystemId(),
+                            itf.getInterfaceId(),
+                            method.getMethodId(),
+                            method.getParameterType(),
+                            method.getUri(),
+                            HttpCommandType.valueOf(method.getHttpCommandType()),
+                            method.isAuth());
+                    configuration.addMapper(httpStatement);
+                    log.info("Gateway Register Service Mapping: System: {} Interface: {} Method: {}", system.getSystemId(), itf.getInterfaceId(), method.getMethodId());
+                }
+            }
+        }
+    }
+
+    public void receiveMessage(Object message) {
+        log.info("[Event Notification] Receive registration center push message: {}", message);
+        addMappers(message.toString().substring(1, message.toString().length() - 1));
+    }
+    
+
 }

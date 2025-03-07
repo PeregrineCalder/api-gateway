@@ -1,6 +1,8 @@
 import center.application.IConfigManageService;
 import center.application.IRegisterManageService;
 import center.domain.manage.model.aggregates.ApplicationSystemRichInfo;
+import center.domain.manage.model.vo.GatewayDistributionVO;
+import center.domain.manage.model.vo.GatewayServerDetailVO;
 import center.domain.manage.model.vo.GatewayServerVO;
 import center.domain.message.Publisher;
 import center.domain.register.model.vo.ApplicationInterfaceMethodVO;
@@ -42,6 +44,27 @@ public class ApiTest {
         List<GatewayServerVO> gatewayServerVOS = configManageService.queryGatewayServerList();
         log.info("Test result: {}", JSON.toJSONString(gatewayServerVOS));
     }
+
+    @Test
+    public void test_queryGatewayServerDetailList() {
+        List<GatewayServerDetailVO> gatewayServerVOS = configManageService.queryGatewayServerDetailList();
+        log.info("Test result: {}", JSON.toJSONString(gatewayServerVOS));
+    }
+
+    @Test
+    public void test_queryGatewayDistributionList() {
+        List<GatewayDistributionVO> gatewayDistributionVOList = configManageService.queryGatewayDistributionList();
+        log.info("Test result: {}", JSON.toJSONString(gatewayDistributionVOList));
+    }
+
+    @Test
+    public void test_application() {
+        log.info("Test result: {}", JSON.toJSONString(configManageService.queryApplicationSystemList()));
+        log.info("Test result: {}", JSON.toJSONString(configManageService.queryApplicationInterfaceList()));
+        log.info("Test result: {}", JSON.toJSONString(configManageService.queryApplicationInterfaceMethodList()));
+    }
+
+
 
     @Test
     public void test_registerGatewayServerNode() {
@@ -101,7 +124,7 @@ public class ApiTest {
 
     @Test
     public void test_queryApplicationSystemRichInfo(){
-        ApplicationSystemRichInfo result = configManageService.queryApplicationSystemRichInfo("api-gateway-g4");
+        ApplicationSystemRichInfo result = configManageService.queryApplicationSystemRichInfo("api-gateway-g4", "api-gateway-test-provider");
         log.info("Test Result: {}", JSON.toJSONString(result));
     }
 

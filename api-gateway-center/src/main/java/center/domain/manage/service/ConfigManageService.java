@@ -9,6 +9,7 @@ import jakarta.annotation.Resource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,16 @@ public class ConfigManageService implements IConfigManageService {
     }
 
     @Override
+    public List<GatewayServerDetailVO> queryGatewayServerDetailList() {
+        return configManageRepository.queryGatewayServerDetailList();
+    }
+
+    @Override
+    public List<GatewayDistributionVO> queryGatewayDistributionList() {
+        return configManageRepository.queryGatewayDistributionList();
+    }
+
+    @Override
     public boolean registerGatewayServerNode(String groupId, String gatewayId, String gatewayName, String gatewayAddress) {
         GatewayServerDetailVO gatewayServerDetailVO = configManageRepository.queryGatewayServerDetail(gatewayId, gatewayName);
         if (gatewayServerDetailVO == null) {
@@ -43,8 +54,13 @@ public class ConfigManageService implements IConfigManageService {
     }
 
     @Override
-    public ApplicationSystemRichInfo queryApplicationSystemRichInfo(String gatewayId) {
-        List<String> systemIdList = configManageRepository.queryGatewayDistributionSystemIdList(gatewayId);
+    public ApplicationSystemRichInfo queryApplicationSystemRichInfo(String gatewayId, String systemId) {
+        List<String> systemIdList = new ArrayList<>();
+        if (systemId == null) {
+            systemIdList = configManageRepository.queryGatewayDistributionSystemIdList(gatewayId);
+        } else {
+            systemIdList.add(systemId);
+        }
         List<ApplicationSystemVO> applicationSystemVOList = configManageRepository.queryApplicationSystemList(systemIdList);
         for (ApplicationSystemVO applicationSystemVO : applicationSystemVOList) {
             List<ApplicationInterfaceVO> applicationInterfaceVOList = configManageRepository.queryApplicationInterfaceList(applicationSystemVO.getSystemId());
@@ -60,5 +76,20 @@ public class ConfigManageService implements IConfigManageService {
     @Override
     public String queryGatewayDistribution(String systemId) {
         return configManageRepository.queryGatewayDistribution(systemId);
+    }
+
+    @Override
+    public List<ApplicationSystemVO> queryApplicationSystemList() {
+        return configManageRepository.queryApplicationSystemList(null);
+    }
+
+    @Override
+    public List<ApplicationInterfaceVO> queryApplicationInterfaceList() {
+        return configManageRepository.queryApplicationInterfaceList(null);
+    }
+
+    @Override
+    public List<ApplicationInterfaceMethodVO> queryApplicationInterfaceMethodList() {
+        return configManageRepository.queryApplicationInterfaceMethodList(null, null);
     }
 }

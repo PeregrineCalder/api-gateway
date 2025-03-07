@@ -9,20 +9,19 @@ import java.util.Date;
 /**
  * @projectName: api-gateway
  * @package: center.domain.manage.model.vo
- * @className: GatewayServerDetailVO
+ * @className: GatewayDistributionVO
  * @author: Peregrine Calder
  * @version: 1.0
  */
 @Getter
 @Setter
 @Builder
-public class GatewayServerDetailVO {
+public class GatewayDistributionVO {
     private Integer id;
     private String groupId;
     private String gatewayId;
-    private String gatewayName;
-    private String gatewayAddress;
-    private Integer status;
+    private String systemId;
+    private String systemName;
     private Date createTime;
     private Date updateTime;
 }

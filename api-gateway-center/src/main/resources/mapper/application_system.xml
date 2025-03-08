@@ -20,10 +20,42 @@
     <select id="queryApplicationSystemList" parameterType="java.util.List" resultMap="applicationSystemMap">
         SELECT id, system_id, system_name, system_type, system_registry
         FROM application_system
-        WHERE system_id in
-        <foreach collection="list" index="idx" item="ids" open="(" close=")" separator=",">
-            #{ids}
-        </foreach>
+        <where>
+            <if test="list != null">
+                system_id in
+                <foreach collection="list" index="idx" item="ids" open="(" close=")" separator=",">
+                    #{ids}
+                </foreach>
+            </if>
+        </where>
     </select>
+
+    <select id="queryApplicationSystemListByPage" parameterType="center.infrastructure.common.OperationRequest" resultMap="applicationSystemMap">
+        SELECT id, system_id, system_name, system_type, system_registry
+        FROM application_system
+        <where>
+            <if test="data != null and data.systemId != ''">
+                and system_id = #{data.systemId}
+            </if>
+            <if test="data != null and data.systemName != ''">
+                and system_name = #{data.systemName}
+            </if>
+        </where>
+        order by id desc
+        limit #{pageStart},#{pageEnd}
+    </select>
+
+    <select id="queryApplicationSystemListCountByPage" parameterType="center.infrastructure.common.OperationRequest" resultType="java.lang.Integer">
+        SELECT count(id) FROM application_system
+        <where>
+            <if test="data != null and data.systemId != ''">
+                and system_id = #{data.systemId}
+            </if>
+            <if test="data != null and data.systemName != ''">
+                and system_name = #{data.systemName}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

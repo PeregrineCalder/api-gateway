@@ -12,6 +12,8 @@
         <module>api-gateway-core</module>
         <module>api-gateway-center</module>
         <module>api-gateway-assist</module>
+        <module>api-gateway-engine</module>
+        <module>api-gateway-sdk</module>
     </modules>
 
     <properties>
@@ -103,6 +105,12 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-test</artifactId>
+                <version>3.4.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>3.4.3</version>
             </dependency>
@@ -126,6 +134,27 @@
                 <artifactId>hutool-all</artifactId>
                 <version>5.8.36</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>3.4.3</version>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>5.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.17.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.docker-java</groupId>
+                <artifactId>docker-java</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

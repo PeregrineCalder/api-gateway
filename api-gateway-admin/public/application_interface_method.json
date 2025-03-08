@@ -1,0 +1,35 @@
+{
+  "list": [
+    {
+      "auth": 0,
+      "httpCommandType": "GET",
+      "interfaceId": "gateway.rpc.IActivityBooth",
+      "methodId": "sayHi",
+      "methodName": "search method",
+      "parameterType": "java.lang.String",
+      "systemId": "api-gateway-test-provider",
+      "uri": "/wg/activity/sayHi"
+    },
+    {
+      "auth": 1,
+      "httpCommandType": "POST",
+      "interfaceId": "gateway.rpc.IActivityBooth",
+      "methodId": "insert",
+      "methodName": "insert method",
+      "parameterType": "gateway.rpc.dto.XReq",
+      "systemId": "api-gateway-test-provider",
+      "uri": "/wg/activity/insert"
+    },
+    {
+      "auth": 0,
+      "httpCommandType": "POST",
+      "interfaceId": "gateway.rpc.IActivityBooth",
+      "methodId": "test",
+      "methodName": "测试方法",
+      "parameterType": "java.lang.String,gateway.rpc.dto.XReq",
+      "systemId": "api-gateway-test-provider",
+      "uri": "/wg/activity/test"
+    }
+  ],
+  "pageTotal": 3
+}

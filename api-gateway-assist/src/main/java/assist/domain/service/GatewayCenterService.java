@@ -28,21 +28,51 @@ public class GatewayCenterService {
         paramMap.put("gatewayId", gatewayId);
         paramMap.put("gatewayName", gatewayName);
         paramMap.put("gatewayAddress", gatewayAddress);
-        String resultStr = HttpUtil.post(address + "/wg/admin/config/registerGateway", paramMap, 550);
+        String resultStr;
+        try {
+            resultStr = HttpUtil.post(address + "/wg/admin/config/registerGateway", paramMap, 550);
+        } catch (Exception e) {
+            log.error("abnormal gateway service registration, unavailable link resources：{}", address + "/wg/admin/config/registerGateway");
+            throw e;
+        }
         Result<Boolean> result = JSON.parseObject(resultStr, new TypeReference<>() {});
         log.info("Register gateway service on gateway center gatewayId: {} gatewayName: {} gatewayAddress: {} register result: {}", gatewayId, gatewayName, gatewayAddress, resultStr);
         if (!"0000".equals(result.getCode()))
             throw new GatewayException("Gateway Service Registration Anomaly [gatewayId：" + gatewayId + "] 、[gatewayAddress：" + gatewayAddress + "]");
     }
 
-    public ApplicationSystemRichInfo pullApplicationSystemRichInfo(String address, String gatewayId) {
+    public ApplicationSystemRichInfo pullApplicationSystemRichInfo(String address, String gatewayId, String systemId) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("gatewayId", gatewayId);
-        String resultStr = HttpUtil.post(address + "/wg/admin/config/queryApplicationSystemRichInfo", paramMap, 550);
+        paramMap.put("systemId", systemId);
+        String resultStr;
+        try {
+            resultStr = HttpUtil.post(address + "/wg/admin/config/queryApplicationSystemRichInfo", paramMap, 550);
+        } catch (Exception e) {
+            log.error("Abnormal gateway service pull, unavailable link resources：{}", address + "/wg/admin/config/queryApplicationSystemRichInfo");
+            throw e;
+        }
         Result<ApplicationSystemRichInfo> result = JSON.parseObject(resultStr, new TypeReference<>(){});
         log.info("Pull the configuration information of the application service and interface from the gateway center to the local device for registration: gatewayId：{}", gatewayId);
         if (!"0000".equals(result.getCode()))
             throw new GatewayException("Pull the configuration information of the application service and interface from the gateway center to the local device for registration error [gatewayId：" + gatewayId + "]");
         return result.getData();
     }
+
+    public Map<String, String> queryRedisConfig(String address) {
+        String resultStr;
+        try {
+            resultStr = HttpUtil.post(address + "/wg/admin/config/queryRedisConfig", "", 1550);
+        } catch (Exception e) {
+            log.error("Gateway service pull abnormal, link resource unavailable: {}", address + "/wg/admin/config/queryRedisConfig", e);
+            throw e;
+        }
+        Result<Map<String, String>> result = JSON.parseObject(resultStr, new TypeReference<>() {
+        });
+        log.info("Complete pulling redis configuration information from gateway: result：{}", resultStr);
+        if (!"0000".equals(result.getCode()))
+            throw new GatewayException("Fail to pull redis configuration information from gateway");
+        return result.getData();
+    }
+
 }

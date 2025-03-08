@@ -1,5 +1,7 @@
 package center.interfaces;
 
+import center.application.IConfigManageService;
+import center.application.IMessageService;
 import center.application.IRegisterManageService;
 import center.domain.register.model.vo.ApplicationInterfaceMethodVO;
 import center.domain.register.model.vo.ApplicationInterfaceVO;
@@ -25,8 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/wg/admin/register")
 @Slf4j
 public class RpcRegisterManage {
+
     @Resource
     private IRegisterManageService registerManageService;
+    @Resource
+    private IConfigManageService configManageService;
+    @Resource
+    private IMessageService messageService;
+
 
     @PostMapping(value = "registerApplication", produces = "application/json;charset=utf-8")
     public Result<Boolean> registerApplication(@RequestParam String systemId,
@@ -108,4 +116,18 @@ public class RpcRegisterManage {
             return new Result<>(ResponseCode.UN_ERROR.getCode(), e.getMessage(), false);
         }
     }
+
+    @PostMapping(value = "registerEvent", produces = "application/json;charset=utf-8")
+    public Result<Boolean> registerEvent(@RequestParam String systemId) {
+        try {
+            log.info("Application information registration notification: systemId：{}", systemId);
+            String gatewayId = configManageService.queryGatewayDistribution(systemId);
+            messageService.pushMessage(gatewayId, systemId);
+            return new Result<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), true);
+        } catch (Exception e) {
+            log.error("Application information registration failure notification: systemId：{}", systemId, e);
+            return new Result<>(ResponseCode.UN_ERROR.getCode(), e.getMessage(), false);
+        }
+    }
+
 }

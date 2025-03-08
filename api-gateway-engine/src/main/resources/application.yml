@@ -1,0 +1,9 @@
+server:
+  port: 8007
+
+api-gateway:
+  address: http://127.0.0.1:8001
+  groupId: 10001
+  gatewayId: api-gateway-g4
+  gatewayName: delivery gateway
+  gatewayAddress: 127.0.0.1:7398

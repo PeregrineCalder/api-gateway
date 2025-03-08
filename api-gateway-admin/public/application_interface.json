@@ -1,0 +1,11 @@
+{
+  "list": [
+    {
+      "interfaceId": "gateway.rpc.IActivityBooth",
+      "interfaceName": "activity service",
+      "interfaceVersion": "1.0.0",
+      "systemId": "api-gateway-test-provider"
+    }
+  ],
+  "pageTotal": 3
+}

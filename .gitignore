@@ -33,3 +33,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/api-gateway-admin/node_modules
+

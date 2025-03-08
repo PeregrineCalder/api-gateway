@@ -1,0 +1,1 @@
+docker run -p 8001:8001 -v /api-gateway/api-gateway-center/doc/data/nginx:/data/nginx -v /var/run/docker.sock:/var/run/docker.sock --name api-gateway-center -d api-gateway-center:1.0.5 CP4-LISTEN:8001,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock TCP4-LISTEN:8001,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock

@@ -6,6 +6,7 @@ import center.domain.manage.model.vo.*;
 import center.domain.manage.repository.IConfigManageRepository;
 import center.infrastructure.common.Constants;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,7 @@ public class ConfigManageService implements IConfigManageService {
     @Override
     public ApplicationSystemRichInfo queryApplicationSystemRichInfo(String gatewayId, String systemId) {
         List<String> systemIdList = new ArrayList<>();
-        if (systemId == null) {
+        if (StringUtils.isEmpty(systemId)) {
             systemIdList = configManageRepository.queryGatewayDistributionSystemIdList(gatewayId);
         } else {
             systemIdList.add(systemId);

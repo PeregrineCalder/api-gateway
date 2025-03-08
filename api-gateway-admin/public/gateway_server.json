@@ -1,0 +1,17 @@
+{
+  "list": [
+    {
+      "groupId": "10001",
+      "groupName": "gateway1"
+    },
+    {
+      "groupId": "10002",
+      "groupName": "gateway2"
+    },
+    {
+      "groupId": "10003",
+      "groupName": "gateway3"
+    }
+  ],
+  "pageTotal": 3
+}

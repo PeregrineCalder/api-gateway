@@ -1,6 +1,9 @@
 server:
   port: 8001
 
+nginx:
+  server_name: 127.0.0.1
+
 spring:
   datasource:
     username: root

@@ -1,0 +1,11 @@
+{
+  "list": [
+    {
+      "systemId": "api-gateway-test-provider",
+      "systemName": "gateway sdk test project",
+      "systemRegistry": "zookeeper://127.0.0.1:2181",
+      "systemType": "RPC"
+    }
+  ],
+  "pageTotal": 3
+}

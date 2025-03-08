@@ -106,8 +106,6 @@ CREATE TABLE `http_statement` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 BEGIN;
-INSERT INTO `http_statement` VALUES (1, 'api-gateway-test', 'gateway.rpc.IActivityBooth', 'sayHi', 'java.lang.String', '/wg/activity/sayHi', 'GET', 0);
-INSERT INTO `http_statement` VALUES (2, 'api-gateway-test', 'gateway.rpc.IActivityBooth', 'insert', 'gateway.rpc.dto.XReq', '/wg/activity/insert', 'POST', 1);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
